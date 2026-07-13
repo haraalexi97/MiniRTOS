@@ -15,6 +15,8 @@ namespace MiniRTOS
 
             void PrintInfo() const;
 
+            int GetPriority() const;
+
         private:
             int m_id;
             std::string m_name;

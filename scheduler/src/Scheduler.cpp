@@ -1,4 +1,5 @@
 #include "Scheduler.hpp"
+
 #include <iostream>
 
 namespace MiniRTOS
@@ -7,18 +8,43 @@ namespace MiniRTOS
         int id,
         const std::string& name,
         int priority)
+    {
+        m_tasks.emplace_back(id, name, priority);
+    }
+
+    void Scheduler::ListTasks() const
+    {
+        std::cout << "\n==== Task List ====\n\n";
+
+        for (const auto& task : m_tasks)
         {
-            m_tasks.emplace_back(id, name, priority);
+            task.PrintInfo();
+            std::cout << '\n';
+        }
+    }
+
+    void Scheduler::RunNextTask()
+    {
+        if (m_tasks.empty())
+        {
+            std::cout << "No tasks available.\n";
+            return;
         }
 
-        void Scheduler::ListTasks() const
-        {
-            std::cout << "\n==== Task List ====\n\n";
+        const Task* highest = &m_tasks[0];
 
-            for (const auto& task : m_tasks)
+        for (const auto& task : m_tasks)
+        {
+            if (task.GetPriority() > highest->GetPriority())
             {
-                task.PrintInfo();
-                std::cout << '\n';
+                highest = &task;
             }
         }
+
+        std::cout << "\n=============================\n";
+        std::cout << "Running Highest Priority Task\n";
+        std::cout << "=============================\n\n";
+
+        highest->PrintInfo();
+    }
 }

@@ -23,6 +23,11 @@ namespace MiniRTOS
                 << "Task Name: " << m_name << '\n'
                 << "Task Priority: " << m_priority << '\n'; 
         }
+
+        int Task::GetPriority() const
+        {
+            return m_priority;
+        }
     }
 
 

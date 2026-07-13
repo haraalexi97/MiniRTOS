@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <string>
+
 #include "Task.hpp"
 
 namespace MiniRTOS
@@ -14,6 +16,8 @@ namespace MiniRTOS
                 int priority);
 
             void ListTasks() const;
+
+            void RunNextTask();
 
         private:
                 std::vector<Task> m_tasks;
