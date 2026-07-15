@@ -25,26 +25,56 @@ namespace MiniRTOS
 
     void Scheduler::RunNextTask()
     {
-        if (m_tasks.empty())
-        {
-            std::cout << "No tasks available.\n";
-            return;
-        }
-
-        const Task* highest = &m_tasks[0];
+        const Task* highest = nullptr;
 
         for (const auto& task : m_tasks)
         {
-            if (task.GetPriority() > highest->GetPriority())
+            if (task.GetState() != TaskState::Ready)
+            {
+                continue;
+            }
+
+            if (highest == nullptr ||
+                task.GetPriority() > highest->GetPriority())
             {
                 highest = &task;
             }
         }
 
+        if (highest == nullptr)
+        {
+            std::cout << "\nNo READY tasks found.\n";
+            return;
+        }
+
         std::cout << "\n=============================\n";
-        std::cout << "Running Highest Priority Task\n";
+        std::cout << "Running Highest Priority READY Task\n";
         std::cout << "=============================\n\n";
 
         highest->PrintInfo();
+    }
+
+    void Scheduler::BlockTask(int id)
+    {
+        for (auto& task : m_tasks)
+        {
+            if (task.GetId() == id)
+            {
+                task.SetState(TaskState::Blocked);
+                return;
+            }
+        }
+    }
+
+    void Scheduler::ReadyTask(int id)
+    {
+        for (auto& task : m_tasks)
+        {
+            if (task.GetId() == id)
+            {
+                task.SetState(TaskState::Ready);
+                return;
+            }
+        }
     }
 }
