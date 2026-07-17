@@ -2,6 +2,11 @@
 
 namespace MiniRTOS
 {
+    TickTimer::TickTimer()
+        : m_tickCount(0)
+    {
+    }
+
     void TickTimer::Tick()
     {
         ++m_tickCount;

@@ -20,7 +20,7 @@ add_executable(
     timer/src/TickTimer.cpp
 )
 
-target_include_directories(
+target_include_directories(MiniRTOS PRIVATE
     MiniRTOS
     PRIVATE
     kernel/include

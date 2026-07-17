@@ -7,11 +7,13 @@ namespace MiniRTOS
     class TickTimer
     {
     public:
+        TickTimer();
+
         void Tick();
 
         std::uint64_t GetTickCount() const;
 
     private:
-        std::uint64_t m_tickCount = 0;
+        std::uint64_t m_tickCount;
     };
 }
