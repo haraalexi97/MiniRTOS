@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <cstddef>
 
 #include "Task.hpp"
 
@@ -17,13 +18,18 @@ namespace MiniRTOS
 
         void ListTasks() const;
 
+        const Task* SelectNextTask();
+
         void RunNextTask();
 
         void BlockTask(int id);
 
         void ReadyTask(int id);
 
+        Task& GetTask(int id);
+
     private:
         std::vector<Task> m_tasks;
+        std::size_t m_lastScheduledIndex = 0;
     };
 }

@@ -1,6 +1,7 @@
 #include "Scheduler.hpp"
 
 #include <iostream>
+#include <stdexcept>
 
 namespace MiniRTOS
 {
@@ -23,25 +24,54 @@ namespace MiniRTOS
         }
     }
 
-    void Scheduler::RunNextTask()
+    const Task* Scheduler::SelectNextTask()
     {
-        const Task* highest = nullptr;
+        if (m_tasks.empty())
+        {
+            return nullptr;
+        }
+
+        // Find the highest READY priority
+        int highestPriority = -1;
 
         for (const auto& task : m_tasks)
         {
-            if (task.GetState() != TaskState::Ready)
+            if (task.GetState() == TaskState::Ready &&
+                task.GetPriority() > highestPriority)
             {
-                continue;
-            }
-
-            if (highest == nullptr ||
-                task.GetPriority() > highest->GetPriority())
-            {
-                highest = &task;
+                highestPriority = task.GetPriority();
             }
         }
 
-        if (highest == nullptr)
+        if (highestPriority == -1)
+        {
+            return nullptr;
+        }
+
+        // Round Robin among highest-priority READY tasks
+        const std::size_t count = m_tasks.size();
+
+        for (std::size_t offset = 1; offset <= count; ++offset)
+        {
+            std::size_t index =
+                (m_lastScheduledIndex + offset) % count;
+
+            if (m_tasks[index].GetState() == TaskState::Ready &&
+                m_tasks[index].GetPriority() == highestPriority)
+            {
+                m_lastScheduledIndex = index;
+                return &m_tasks[index];
+            }
+        }
+
+        return nullptr;
+    }
+
+    void Scheduler::RunNextTask()
+    {
+        const Task* task = SelectNextTask();
+
+        if (task == nullptr)
         {
             std::cout << "\nNo READY tasks found.\n";
             return;
@@ -51,7 +81,7 @@ namespace MiniRTOS
         std::cout << "Running Highest Priority READY Task\n";
         std::cout << "=============================\n\n";
 
-        highest->PrintInfo();
+        task->PrintInfo();
     }
 
     void Scheduler::BlockTask(int id)
@@ -76,5 +106,18 @@ namespace MiniRTOS
                 return;
             }
         }
+    }
+
+    Task& Scheduler::GetTask(int id)
+    {
+        for (auto& task : m_tasks)
+        {
+            if (task.GetId() == id)
+            {
+                return task;
+            }
+        }
+
+        throw std::runtime_error("Task not found");
     }
 }

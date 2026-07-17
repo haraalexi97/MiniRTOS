@@ -17,6 +17,7 @@ add_executable(
     app/main.cpp
     kernel/src/Task.cpp
     scheduler/src/Scheduler.cpp
+    timer/src/TickTimer.cpp
 )
 
 target_include_directories(
@@ -24,4 +25,5 @@ target_include_directories(
     PRIVATE
     kernel/include
     scheduler/include
+    timer/include
 )
