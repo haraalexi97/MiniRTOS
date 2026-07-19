@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <cstddef>
+#include <cstdint>
 
 #include "Task.hpp"
 
@@ -27,6 +28,10 @@ namespace MiniRTOS
         void ReadyTask(int id);
 
         Task& GetTask(int id);
+
+        void DelayTask(int id, std::uint64_t currentTick, std::uint64_t delay);
+        
+        void UpdateDelayedTasks(std::uint64_t currentTick);
 
     private:
         std::vector<Task> m_tasks;

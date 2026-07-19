@@ -120,4 +120,30 @@ namespace MiniRTOS
 
         throw std::runtime_error("Task not found");
     }
+    void Scheduler::DelayTask(
+    int id,
+    std::uint64_t currentTick,
+    std::uint64_t delay)
+{
+    for (auto& task : m_tasks)
+    {
+        if (task.GetId() == id)
+        {
+            task.SetState(TaskState::Blocked);
+            task.SetWakeTick(currentTick + delay);
+            return;
+        }
+    }
+}
+void Scheduler::UpdateDelayedTasks(std::uint64_t currentTick)
+{
+    for (auto& task : m_tasks)
+    {
+        if (task.GetState() == TaskState::Blocked &&
+            task.GetWakeTick() <= currentTick)
+        {
+            task.SetState(TaskState::Ready);
+        }
+    }
+}
 }

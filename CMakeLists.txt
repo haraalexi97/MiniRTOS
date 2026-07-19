@@ -18,6 +18,8 @@ add_executable(
     kernel/src/Task.cpp
     scheduler/src/Scheduler.cpp
     timer/src/TickTimer.cpp
+    queue/src/MessageQueue.cpp
+    synchronization/src/Mutex.cpp
 )
 
 target_include_directories(MiniRTOS PRIVATE
@@ -26,4 +28,6 @@ target_include_directories(MiniRTOS PRIVATE
     kernel/include
     scheduler/include
     timer/include
+    queue/include
+    synchronization/include
 )

@@ -12,7 +12,8 @@ namespace MiniRTOS
         m_id(id),
         m_name(name),
         m_priority(priority),
-        m_state(TaskState::Ready)
+        m_state(TaskState::Ready),
+        m_wakeTick(0)
     {
     }
 
@@ -70,5 +71,13 @@ namespace MiniRTOS
     void Task::SetState(TaskState state)
     {
         m_state = state;
+    }
+    void Task::SetWakeTick(std::uint64_t tick)
+    {
+        m_wakeTick = tick;
+    }
+    std::uint64_t Task::GetWakeTick() const
+    {
+        return m_wakeTick;
     }
 }
